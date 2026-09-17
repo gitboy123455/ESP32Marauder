@@ -310,28 +310,16 @@ void Display::drawBootSplash() {
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.drawCentreString("ESP32 Marauder", width / 2, layout.title_y, 1);
 
-  const uint32_t source_x_step = layout.logo_width > 1
-      ? (static_cast<uint32_t>(JCMK_LOGO_WIDTH - 1) << 8) /
-            (layout.logo_width - 1)
-      : 0;
-  const uint32_t source_y_step = layout.logo_height > 1
-      ? (static_cast<uint32_t>(JCMK_LOGO_HEIGHT - 1) << 8) /
-            (layout.logo_height - 1)
-      : 0;
-  for (int16_t y = 0; y < layout.logo_height; ++y) {
-    int16_t run_start = -1;
-    for (int16_t x = 0; x <= layout.logo_width; ++x) {
-      const bool white = x < layout.logo_width &&
-          cleanLogoPixel(x, y, layout.logo_width, layout.logo_height,
-                         source_x_step, source_y_step);
-      if (white && run_start < 0) run_start = x;
-      if (!white && run_start >= 0) {
-        tft.drawFastHLine(layout.logo_x + run_start, layout.logo_y + y,
-                          x - run_start, TFT_WHITE);
-        run_start = -1;
-      }
-    }
-  }
+  // FIXED 2.8" CYD COLOR DRAW
+  // Centers the 240-width logo perfectly on the X-axis (0) 
+  // and offsets it slightly on the Y-axis to give the text space.
+  tft.drawRGBBitmap(
+      0, 
+      20, 
+      JCMK_LOGO_BITMAP, 
+      JCMK_LOGO_WIDTH, 
+      JCMK_LOGO_HEIGHT
+  );
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.drawCentreString(version_number, width / 2, layout.version_y, 1);
@@ -339,6 +327,7 @@ void Display::drawBootSplash() {
   tft.drawCentreString("Initializing...", width / 2, layout.status_y, 1);
   tft.setTextSize(1);
 }
+
 
 void Display::tftDrawGraphObjects(byte x_scale)
 {
