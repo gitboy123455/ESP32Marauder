@@ -159,8 +159,14 @@ uint8_t Display::updateTouch(uint16_t *x, uint16_t *y, uint16_t threshold) {
               *y = map(p.x, 200, 3700, 1, TFT_HEIGHT);
               break;
           }
+
+          // ADD THESE TWO LINES HERE TO INVERT BOTH AXES:
+          *x = TFT_WIDTH - *x;
+          *y = TFT_HEIGHT - *y;
+
           return 1;
         }
+
         else
           return 0;
       #endif
